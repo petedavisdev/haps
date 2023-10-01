@@ -1,0 +1,19 @@
+<button onclick="decrement('count')">Count down</button>
+<span data-uio="count">0</span>
+<button onclick="increment('count')">Count up</button>
+<p>
+  <button data-uio="switch" onclick="toggle('switch')">off</button>
+  <span data-uio-show="switch:on">Hello</span>
+  <span data-uio-class="switch">Boo</span>
+</p>
+
+<form name="uio">
+  <label>count <input type="number" name="count" value="0" /></label>
+  
+  <label>switch:on 
+    <input type="radio" name="switch" value="on" />
+  </label>
+  <label>switch:off
+    <input type="radio" name="switch" value="off" checked />
+  </label>
+</form>

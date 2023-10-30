@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="styles.css" />
+		<script src="haps.js" defer></script>
+		<link rel="stylesheet" href="haps.css" />
+		<script src="haps-dev.js" defer></script>
+		<link rel="stylesheet" href="haps-dev.css" />
+	</head>
+	<body>
+		<button onclick="hpUpdate('count', (value) => +value - 10)">
+			Count down
+		</button>
+
+		<span hp-text="count" hp-class="count">0</span>
+
+		<button onclick="hpUpdate('count', (value) => +value + 10)">
+			Count up
+		</button>
+
+		<p>
+			<button
+				hp-text="switch"
+				hp-class="switch"
+				onclick="toggle('switch')"
+			>
+				off
+			</button>
+			<span hp-show="switch:on" style="display: none">Hello</span>
+		</p>
+
+		<form name="hp">
+			<label>count <input type="number" name="count" value="0" /></label>
+
+			<label
+				>switch:on
+				<input type="radio" name="switch" value="on" />
+			</label>
+			<label
+				>switch:off
+				<input type="radio" name="switch" value="off" checked />
+			</label>
+		</form>
+
+		<script>
+			function increment(name) {
+				hpUpdate(name, (value) => +value + 10);
+			}
+
+			function decrement(name) {
+				hpUpdate(name, (value) => +value - 10);
+			}
+
+			function toggle(name) {
+				hpUpdate(name, (value) => (value === 'on' ? 'off' : 'on'));
+			}
+		</script>
+	</body>
+</html>

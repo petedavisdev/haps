@@ -1,10 +1,10 @@
-const hpForm = document.forms.hp;
-const hpFieldNames = [...new FormData(hpForm).keys()];
+[...document.forms].forEach((form) => {
+	const hpFieldNames = [...new FormData(form).keys()];
+	hpFieldNames.forEach((fieldName) => hpUpdate(form.name, fieldName));
+});
 
-hpFieldNames.forEach((fieldName) => hpUpdate(fieldName));
-
-function hpUpdate(fieldName, updater = (value) => value) {
-	const field = hpForm[fieldName];
+function hpUpdate(formName, fieldName, updater = (value) => value) {
+	const field = document.forms[formName][fieldName];
 	const value = (field.value = updater(field?.value));
 
 	hpClass(fieldName, value);

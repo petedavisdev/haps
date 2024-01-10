@@ -6,18 +6,18 @@
 		<title>Document</title>
 		<link rel="stylesheet" href="styles.css" />
 		<script src="haps.js" defer></script>
-		<link rel="stylesheet" href="haps.css" />
-		<script src="haps-dev.js" defer></script>
+		<!-- <link rel="stylesheet" href="haps.css" /> -->
+		<!-- <script src="haps-dev.js" defer></script> -->
 		<link rel="stylesheet" href="haps-dev.css" />
 	</head>
 	<body>
-		<button onclick="hpUpdate('count', (value) => +value - 10)">
+		<button onclick="hpUpdate('form1', 'count', (value) => +value - 10)">
 			Count down
 		</button>
 
 		<span hp-text="count" hp-class="count">0</span>
 
-		<button onclick="hpUpdate('count', (value) => +value + 10)">
+		<button onclick="hpUpdate('form1', 'count', (value) => +value + 10)">
 			Count up
 		</button>
 
@@ -25,16 +25,27 @@
 			<button
 				hp-text="switch"
 				hp-class="switch"
-				onclick="toggle('switch')"
+				onclick="toggle('form2', 'switch')"
 			>
 				off
 			</button>
 			<span hp-show="switch:on" style="display: none">Hello</span>
 		</p>
 
-		<form name="hp">
+		<form name="form1">
 			<label>count <input type="number" name="count" value="0" /></label>
 
+			<label
+				>switch:on
+				<input type="radio" name="switch" value="on" />
+			</label>
+			<label
+				>switch:off
+				<input type="radio" name="switch" value="off" checked />
+			</label>
+		</form>
+
+		<form name="form2">
 			<label
 				>switch:on
 				<input type="radio" name="switch" value="on" />
@@ -54,8 +65,10 @@
 				hpUpdate(name, (value) => +value - 10);
 			}
 
-			function toggle(name) {
-				hpUpdate(name, (value) => (value === 'on' ? 'off' : 'on'));
+			function toggle(formName, fieldName) {
+				hpUpdate(formName, fieldName, (value) =>
+					value === 'on' ? 'off' : 'on'
+				);
 			}
 		</script>
 	</body>

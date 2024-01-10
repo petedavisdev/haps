@@ -1,18 +1,41 @@
+//@ts-check
+
+// Initialize Haps
 [...document.forms].forEach((form) => {
+	console.log([...new FormData(form).keys()]);
+	const formName = form.name;
 	const hpFieldNames = [...new FormData(form).keys()];
-	hpFieldNames.forEach((fieldName) => hpUpdate(form.name, fieldName));
+
+	hpFieldNames.forEach((fieldName) => {
+		hpUpdate(formName, fieldName);
+
+		const field = form[fieldName];
+		const fieldInputs = field.length ? field : [field];
+
+		fieldInputs.forEach((input) =>
+			input?.addEventListener('input', () =>
+				hpUpdate(formName, fieldName)
+			)
+		);
+	});
 });
 
+// hp-update
+/**
+ * @param {string} formName - The name of the form
+ * @param {string} fieldName - The name of the field
+ * @param {function(string):string} [updater] - A function that takes the field's value and returns a new value
+ */
 function hpUpdate(formName, fieldName, updater = (value) => value) {
 	const field = document.forms[formName][fieldName];
 	const value = (field.value = updater(field?.value));
 
-	hpClass(fieldName, value);
-	hpShow(fieldName, value);
-	hpText(fieldName, value);
-}
+	// hp-text
+	document
+		.querySelectorAll(`[hp-text="${fieldName}"]`)
+		?.forEach((el) => (el.textContent = value));
 
-function hpClass(fieldName, value) {
+	// hp-class
 	document.querySelectorAll(`[hp-class="${fieldName}"]`)?.forEach((el) => {
 		el.classList.forEach(
 			(item) =>
@@ -21,20 +44,18 @@ function hpClass(fieldName, value) {
 
 		el.classList.add(`hp-${fieldName}-${value}`);
 	});
-}
 
-function hpShow(fieldName, value) {
-	document.querySelectorAll(`[hp-show^="${fieldName}:"]`)?.forEach((el) => {
+	// hp-show
+	/**@type NodeListOf<HTMLElement>*/ (
+		document.querySelectorAll(`[hp-show="${fieldName}"]`)
+	).forEach((el) => {
 		el.style.display = 'none';
 
-		const shownValues = el.getAttribute('hp-show').split(':')[1].split('|');
+		const shownValues = el
+			.getAttribute('hp-show')
+			?.split(':')[1]
+			.split('|');
 
-		if (shownValues.includes(value)) el.style.removeProperty('display');
+		if (shownValues?.includes(value)) el.style.removeProperty('display');
 	});
-}
-
-function hpText(fieldName, value) {
-	document
-		.querySelectorAll(`[hp-text="${fieldName}"]`)
-		?.forEach((el) => (el.textContent = value));
 }

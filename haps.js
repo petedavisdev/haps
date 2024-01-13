@@ -1,53 +1,49 @@
 //@ts-check
 
 // Initialize Haps
-[...document.forms].forEach((form) => {
-	console.log([...new FormData(form).keys()]);
-	const formName = form.name;
-	const hpFieldNames = [...new FormData(form).keys()];
-
-	hpFieldNames.forEach((fieldName) => {
-		hpUpdate(formName, fieldName);
-
-		const field = form[fieldName];
-		const fieldInputs = field.length ? field : [field];
-
-		fieldInputs.forEach((input) =>
-			input?.addEventListener('input', () =>
-				hpUpdate(formName, fieldName)
-			)
-		);
-	});
+/**@type NodeListOf<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>*/ (
+	document.querySelectorAll('input[hp-is], textarea[hp-is], select[hp-is]')
+).forEach((input) => {
+	hpUpdate(input);
+	input.addEventListener('input', () => hpUpdate(input));
 });
 
 // hp-update
 /**
- * @param {string} formName - The name of the form
- * @param {string} fieldName - The name of the field
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | string} input - The name of the form
  * @param {function(string):string} [updater] - A function that takes the field's value and returns a new value
  */
-function hpUpdate(formName, fieldName, updater = (value) => value) {
-	const field = document.forms[formName][fieldName];
-	const value = (field.value = updater(field?.value));
+function hpUpdate(input, updater = (value) => value) {
+	if (typeof input === 'string') {
+		input =
+			/**@type HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement */ (
+				document.querySelector(`[name="${input}"]`)
+			);
+		if (!input) return;
+	}
+
+	const value = (input.value = updater(input.value));
+	console.log(value);
+	const name = input.name;
 
 	// hp-text
 	document
-		.querySelectorAll(`[hp-text="${fieldName}"]`)
+		.querySelectorAll(`[hp-text="${name}"]`)
 		?.forEach((el) => (el.textContent = value));
 
 	// hp-class
-	document.querySelectorAll(`[hp-class="${fieldName}"]`)?.forEach((el) => {
+	document.querySelectorAll(`[hp-class="${name}"]`)?.forEach((el) => {
 		el.classList.forEach(
 			(item) =>
-				item.startsWith(`hp-${fieldName}-`) && el.classList.remove(item)
+				item.startsWith(`hp-${name}-`) && el.classList.remove(item)
 		);
 
-		el.classList.add(`hp-${fieldName}-${value}`);
+		el.classList.add(`hp-${name}-${value}`);
 	});
 
 	// hp-show
 	/**@type NodeListOf<HTMLElement>*/ (
-		document.querySelectorAll(`[hp-show="${fieldName}"]`)
+		document.querySelectorAll(`[hp-show="${name}"]`)
 	).forEach((el) => {
 		el.style.display = 'none';
 

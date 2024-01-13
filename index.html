@@ -10,7 +10,7 @@
 	<body>
 		<button
 			type="button"
-			onclick="hpUpdate('form1', 'count', (value) => +value - 10)"
+			onclick="hpUpdate('count', (value) => +value - 10)"
 		>
 			Count down
 		</button>
@@ -19,7 +19,7 @@
 
 		<button
 			type="button"
-			onclick="hpUpdate('form1', 'count', (value) => +value + 10)"
+			onclick="hpUpdate('count', (value) => +value + 10)"
 		>
 			Count up
 		</button>
@@ -29,32 +29,30 @@
 				type="button"
 				hp-text="switch"
 				hp-class="switch"
-				onclick="toggle('form2', 'toggle')"
+				onclick="toggle('switch')"
 			>
 				off
 			</button>
 			<span hp-show="switch:on" style="display: none">Hello</span>
 		</p>
 
-		<form name="form1">
-			<label>count <input type="number" name="count" value="0" /></label>
-		</form>
+		<label>
+			count <input type="number" name="count" value="0" hp-is />
+		</label>
 
-		<form name="form2">
-			<label>
-				switch:on
-				<input type="radio" name="switch" value="on" />
-			</label>
-			<label>
-				switch:off
-				<input type="radio" name="switch" value="off" />
-			</label>
+		<label>
+			switch:on
+			<input type="radio" name="switch" value="on" hp-is />
+		</label>
+		<label>
+			switch:off
+			<input type="radio" name="switch" value="off" hp-is checked />
+		</label>
 
-			<label>
-				toggle:on
-				<input type="checkbox" name="toggle" value="on" />
-			</label>
-		</form>
+		<label>
+			toggle:on
+			<input type="checkbox" name="toggle" value="on" hp-is />
+		</label>
 
 		<script>
 			function increment(name) {
@@ -65,9 +63,8 @@
 				hpUpdate(name, (value) => +value - 10);
 			}
 
-			function toggle(formName, fieldName) {
-				hpUpdate(formName, fieldName, (value) => {
-					console.log(value);
+			function toggle(fieldName) {
+				hpUpdate(fieldName, (value) => {
 					return value === 'on' ? 'off' : 'on';
 				});
 			}
